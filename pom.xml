@@ -24,6 +24,12 @@
     <maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
 	<findbugs-maven-plugin.version>3.0.0</findbugs-maven-plugin.version>
 	<maven-checkstyle-plugin.version>2.13</maven-checkstyle-plugin.version>
+	<checkstyle-plugin.version>6.1.1</checkstyle-plugin.version>
+    <!-- Google checkstyle -->
+<!--	<maven-checkstyle-plugin.file.path>src/main/resources/checkstyle/google_checks.xml</maven-checkstyle-plugin.file.path>
+-->
+    <!-- Sun Java Style - checkstyle -->
+	<maven-checkstyle-plugin.file.path>src/main/resources/checkstyle/checkstyle.xml</maven-checkstyle-plugin.file.path>
 	<maven-surefire-plugin.version>2.18</maven-surefire-plugin.version>
     <maven-javadoc-plugin.version>2.10.1</maven-javadoc-plugin.version>
 	<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
@@ -91,6 +97,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>${maven-checkstyle-plugin.version}</version>
+		<dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${checkstyle-plugin.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.jenkins-ci.tools</groupId>
@@ -148,10 +161,12 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>${maven-checkstyle-plugin.version}</version>
 		<configuration>
-			<includeTestResources>false</includeTestResources>
-			<configLocation>src/main/resources/checkstyle/checkstyle.xml</configLocation>
-			<!-- Remove jenkins auto generated artifacts, such as messages -->
-			<excludes>target/generated-sources/**</excludes>
+          <configLocation>${maven-checkstyle-plugin.file.path}</configLocation>
+          <failOnViolation>false</failOnViolation>
+          <!-- Remove jenkins auto generated Test artifacts -->
+          <includeTestResources>false</includeTestResources>
+          <!-- Remove jenkins auto generated artifacts, such as messages -->
+          <excludes>target/generated-sources/**</excludes>
 		</configuration>
       </plugin> 
       <plugin>
@@ -168,7 +183,13 @@
 
 	
   <!-- Add all your dependencies here! -->
-  <dependencies/>
+  <dependencies>
+    <dependency>
+      <groupId>com.puppycrawl.tools</groupId>
+      <artifactId>checkstyle</artifactId>
+      <version>${checkstyle-plugin.version}</version>
+    </dependency>
+  </dependencies>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
   <repositories>
